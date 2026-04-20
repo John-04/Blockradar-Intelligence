@@ -1,0 +1,26 @@
+# API Framework
+fastapi
+uvicorn[standard]
+
+# Database
+sqlalchemy
+psycopg2-binary
+alembic
+
+# Data & ML
+pandas
+numpy
+scikit-learn
+joblib
+
+# HTTP Client (for Blockradar API)
+httpx
+
+# Environment & Config
+python-dotenv
+pydantic
+pydantic-settings
+
+# Utilities
+python-dateutil
+pytz

@@ -1,0 +1,15 @@
+import { useQuery } from '@tanstack/react-query'
+import {
+  fetchSummary, fetchMonthlyVolume, fetchRegional,
+  fetchTypeBreakdown, fetchChurnScores, fetchDistribution,
+  fetchDormancy, fetchHighRisk,
+} from '../api/client'
+
+export const useSummary       = () => useQuery({ queryKey: ['summary'],       queryFn: fetchSummary })
+export const useMonthlyVolume = () => useQuery({ queryKey: ['monthly'],        queryFn: fetchMonthlyVolume })
+export const useRegional      = () => useQuery({ queryKey: ['regional'],       queryFn: fetchRegional })
+export const useTypeBreakdown = () => useQuery({ queryKey: ['type-breakdown'], queryFn: fetchTypeBreakdown })
+export const useChurnScores   = (params) => useQuery({ queryKey: ['churn-scores', params], queryFn: () => fetchChurnScores(params) })
+export const useDistribution  = () => useQuery({ queryKey: ['distribution'],   queryFn: fetchDistribution })
+export const useDormancy      = () => useQuery({ queryKey: ['dormancy'],       queryFn: fetchDormancy })
+export const useHighRisk      = () => useQuery({ queryKey: ['high-risk'],      queryFn: fetchHighRisk })
