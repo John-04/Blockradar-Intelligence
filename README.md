@@ -1,8 +1,18 @@
 # Blockradar Intelligence
 
-> Wallet analytics, churn prediction, and retention insights for Blockradar's fintech customers.
+> A full-stack wallet analytics & churn prediction platform built on top of the Blockradar API.
 
-Built as a full-stack data solution: a FastAPI backend, PostgreSQL data store, scikit-learn churn model, and a React dashboard — all wired together with Docker.
+Built as a direct outreach project — identifying a real retention problem at Blockradar and building the solution before sending the pitch.
+
+---
+
+## What it does
+
+- **Churn Risk Scoring** — ML model that scores every fintech by probability of going inactive
+- **Wallet Dormancy Tracking** — identifies wallets with no activity in 60+ days
+- **Regional Performance** — Africa, LatAm, Middle East & Southeast Asia breakdown
+- **Transaction Volume Trends** — 18-month regional volume analysis
+- **Real-time Alerts** — flags high risk fintechs before they churn
 
 ---
 
@@ -10,86 +20,98 @@ Built as a full-stack data solution: a FastAPI backend, PostgreSQL data store, s
 
 | Layer | Technology |
 |---|---|
-| Data Ingestion | Python + Blockradar REST API |
+| Backend API | FastAPI (Python) |
+| ML Pipeline | scikit-learn, pandas, numpy |
 | Database | PostgreSQL + SQLAlchemy |
-| ML Pipeline | scikit-learn (Gradient Boosting) |
-| Backend API | FastAPI |
 | Frontend | React + Recharts |
+| Auth | Google OAuth + JWT |
+| Data Source | Blockradar REST API |
 | Infra | Docker + docker-compose |
-
----
-
-## Project Structure
-
-blockradar-intelligence/
-├── backend/        # FastAPI — analytics + churn API
-├── frontend/       # React dashboard
-├── pipeline/       # Data ingestion + ML training scripts
-├── .env.example    # Environment variable template
-└── docker-compose.yml
 
 ---
 
 ## Getting Started
 
-### 1. Clone & configure environment
+### 1. Clone the repo
 ```bash
-git clone <your-repo-url>
-cd blockradar-intelligence
-cp .env.example .env
-# Fill in your values in .env
+git clone https://github.com/John-04/Blockradar-Intelligence.git
+cd Blockradar-Intelligence
 ```
 
-### 2. Set up Python backend
+### 2. Configure environment
+```bash
+# Backend
+cd backend
+copy .env.example .env
+# Fill in BLOCKRADAR_API_KEY, BLOCKRADAR_WALLET_ID, POSTGRES_PASSWORD
+
+# Frontend
+cd ../frontend
+# Add VITE_GOOGLE_CLIENT_ID to frontend/.env
+```
+
+### 3. Run the backend
 ```bash
 cd backend
 python -m venv venv
-venv\Scripts\activate        # Windows
+venv\Scripts\activate
 pip install -r requirements.txt
-```
-
-### 3. Run the pipeline (simulated mode)
-```bash
-cd pipeline
-python simulate.py           # generates data
-python train.py              # trains churn model
-```
-
-### 4. Start the backend
-```bash
-cd backend
 uvicorn app.main:app --reload
-# API docs at http://localhost:8000/docs
 ```
 
-### 5. Start the frontend
+### 4. Run the frontend
 ```bash
 cd frontend
 npm install
 npm run dev
-# Dashboard at http://localhost:5173
 ```
 
-### 6. Full stack with Docker (once installed)
-```bash
-docker-compose up --build
-```
+### 5. Open the dashboard
+
+http://localhost:5173
 
 ---
 
-## Switching to Real Data
+## API Endpoints
 
-1. Get your API key from [dashboard.blockradar.co](https://dashboard.blockradar.co)
-2. Set `BLOCKRADAR_API_KEY` and `BLOCKRADAR_WALLET_ID` in `.env`
-3. Set `DATA_MODE=real` in `.env`
-4. Run `python pipeline/ingest.py`
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/analytics/summary` | Top-level KPIs |
+| GET | `/analytics/monthly-volume` | Monthly volume by region |
+| GET | `/analytics/regional` | Per-region aggregates |
+| GET | `/churn/scores` | Churn scores for all fintechs |
+| GET | `/churn/high-risk` | High risk fintechs only |
+| GET | `/churn/distribution` | Risk tier counts |
+| GET | `/wallets/dormancy` | Dormancy stats by region |
+| GET | `/wallets/activity` | Raw wallet activity |
+
+Full interactive docs at `http://localhost:8000/docs`
 
 ---
 
-## Key Features
+## Data Modes
 
-- **Churn Risk Scoring** — every fintech scored Low / Medium / High
-- **Wallet Dormancy Tracking** — activation rates per region and fintech
-- **Transaction Volume Trends** — 18-month regional breakdown
-- **Regional Performance** — Africa, LatAm, Middle East, Southeast Asia
-- **Live Dashboard** — React frontend pulling from FastAPI in real time
+Set `DATA_MODE` in `backend/.env`:
+
+- `simulated` — generates 100k wallets & 150k transactions for demo
+- `real` — connects to your live Blockradar account via API
+
+---
+
+## Disclaimer
+
+> The dashboard demo runs on simulated data generated to show what the platform looks like at scale. The architecture, API integration, and ML pipeline are production-ready. Real fintech data populates automatically when connected to a live Blockradar account with active wallets and transactions.
+
+---
+
+## Why I built this
+
+Blockradar is a 5-person team serving 100+ fintechs across 4 regions with $300M+ in transaction volume.
+
+At that scale and team size, there's no dedicated system tracking which fintechs are going quiet, which wallets have gone dormant, or who's about to churn.
+
+I built the solution and sent it as my pitch.
+
+---
+
+*Built by [@John-04](https://github.com/John-04) · April 2026*
