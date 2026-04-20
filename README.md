@@ -98,10 +98,13 @@ Set `DATA_MODE` in `backend/.env`:
 
 ---
 
-## Disclaimer
+## Data & API Connection
 
-> The dashboard demo runs on simulated data generated to show what the platform looks like at scale. The architecture, API integration, and ML pipeline are production-ready. Real fintech data populates automatically when connected to a live Blockradar account with active wallets and transactions.
-
+> This platform is connected to a **live Blockradar account** via their REST API. Real wallet addresses and account data are fetched directly from Blockradar's infrastructure on startup.
+>
+> Current account is on the free plan with 6 active wallet addresses and no transactions yet. As wallets transact, the churn model, dormancy tracker, and volume charts will populate with fully live data automatically.
+>
+> To run with simulated data at scale (100k wallets, 150k transactions across 100+ fintechs), set `DATA_MODE=simulated` in your `.env` file.
 ---
 
 ## Why I built this
