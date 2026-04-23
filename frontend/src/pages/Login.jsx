@@ -9,23 +9,33 @@ export default function Login({ onLogin, onSignup }) {
   const [loading, setLoading]   = useState(false)
   const [error, setError]       = useState('')
   const googleLogin = useGoogleLogin({
-  onSuccess: (tokenResponse) => {
-    console.log('Google login success:', tokenResponse)
-    onLogin()
-  },
-  onError: (error) => {
-    console.log('Google login error:', error)
-    setError('Google login failed. Please try again.')
-  },
-})
+    onSuccess: async (tokenResponse) => {
+        try {
+        const { googleAuth } = await import('../api/client')
+        const data = await googleAuth(tokenResponse.access_token)
+        onLogin(data.user, data.access_token)
+        } catch (err) {
+        setError('Google login failed. Please try again.')
+        }
+    },
+    onError: () => setError('Google login failed. Please try again.'),
+  })
 
   const handle = async (e) => {
     e.preventDefault()
     if (!email || !password) { setError('Please fill in all fields.'); return }
     setLoading(true); setError('')
-    await new Promise(r => setTimeout(r, 1200))
-    setLoading(false)
-    onLogin()
+
+    try {
+        const { loginUser } = await import('../api/client')
+        const data = await loginUser(email, password)
+        onLogin(data.user, data.access_token)
+    } catch (err) {
+        const msg = err.response?.data?.detail || 'Invalid email or password.'
+        setError(msg)
+    } finally {
+        setLoading(false)
+    }
   }
 
   return (

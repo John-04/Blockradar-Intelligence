@@ -55,24 +55,34 @@ export default function Signup({ onSignup, onLogin }) {
   const [loading,  setLoading]  = useState(false)
   const [error,    setError]    = useState('')
   const googleLogin = useGoogleLogin({
-  onSuccess: (tokenResponse) => {
-    console.log('Google signup success:', tokenResponse)
-    onSignup()
-  },
-  onError: (error) => {
-    console.log('Google signup error:', error)
-    setError('Google sign up failed. Please try again.')
-  },
-})
+    onSuccess: async (tokenResponse) => {
+        try {
+        const { googleAuth } = await import('../api/client')
+        const data = await googleAuth(tokenResponse.access_token)
+        onSignup(data.user, data.access_token)
+        } catch (err) {
+        setError('Google sign up failed. Please try again.')
+        }
+    },
+    onError: () => setError('Google sign up failed. Please try again.'),
+  })
 
   const handle = async (e) => {
     e.preventDefault()
     if (!name || !email || !password) { setError('Please fill in all required fields.'); return }
     if (password.length < 6) { setError('Password must be at least 6 characters.'); return }
     setLoading(true); setError('')
-    await new Promise(r => setTimeout(r, 1400))
-    setLoading(false)
-    onSignup()
+
+    try {
+        const { registerUser } = await import('../api/client')
+        const data = await registerUser(email, password, name, company)
+        onSignup(data.user, data.access_token)
+    } catch (err) {
+        const msg = err.response?.data?.detail || 'Registration failed. Please try again.'
+        setError(msg)
+    } finally {
+        setLoading(false)
+    }
   }
 
   return (

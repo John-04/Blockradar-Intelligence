@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from app.core.config import get_settings
-from app.api.routes import analytics, churn, wallets
+from app.api.routes import analytics, churn, wallets, auth
 from datetime import datetime
 
 settings = get_settings()
@@ -16,6 +16,12 @@ async def lifespan(app: FastAPI):
     print(f"  Mode     : {settings.data_mode.upper()}")
     print(f"  Docs     : http://localhost:{settings.api_port}/docs")
     print("=" * 55)
+
+    # create database tables
+    from app.core.database import create_tables
+    from app.models import user, wallet, transaction  # import models so SQLAlchemy sees them
+    create_tables()
+    print("  ✓ Database tables ready")
 
     from app.core.state import app_state
     from app.services.churn_engine import run_churn_pipeline
@@ -220,6 +226,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(auth.router,      prefix="/auth",      tags=["Auth"])
 app.include_router(analytics.router, prefix="/analytics", tags=["Analytics"])
 app.include_router(churn.router,     prefix="/churn",     tags=["Churn"])
 app.include_router(wallets.router,   prefix="/wallets",   tags=["Wallets"])

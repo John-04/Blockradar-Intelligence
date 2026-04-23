@@ -46,7 +46,7 @@ function NavItem({ item, active, setActive }) {
 }
 
 // ── Sidebar
-function Sidebar({ active, setActive, onLogout }) {
+function Sidebar({ active, setActive, onLogout, user }) {
   const nav = [
     { id: 'home',       label: 'Home',        icon: Home },
     { id: 'analytics',  label: 'Analytics',   icon: BarChart3 },
@@ -121,6 +121,15 @@ function Sidebar({ active, setActive, onLogout }) {
         border: '1px solid var(--border)',
         borderRadius: 10, fontSize: 11,
       }}>
+
+      {/* User info */}
+      {user && (
+        <div style={{ padding: '10px 12px', marginBottom: 4 }}>
+          <div style={{ fontSize: 13, fontWeight: 600, truncate: true }}>{user.name || user.email}</div>
+          <div style={{ fontSize: 11, color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.email}</div>
+        </div>
+      )}
+
         <div style={{ fontWeight: 700, marginBottom: 2 }}>Free Plan</div>
         <div style={{ color: 'var(--text-muted)', marginBottom: 8, fontSize: 10 }}>0 of 100 Addresses · $0 of $50k</div>
         <div style={{ height: 3, background: 'var(--border)', borderRadius: 2, marginBottom: 10 }}>
@@ -639,7 +648,7 @@ cd frontend && npm install && npm run dev
 }
 
 // ── Root
-export default function Dashboard({ theme, setTheme, onLogout }) {
+export default function Dashboard({ theme, setTheme, onLogout, user }) {
   const [active, setActive] = useState('home')
   const [notifOpen, setNotifOpen] = useState(false)
   const [notifPanelOpen, setNotifPanelOpen] = useState(false)
@@ -651,7 +660,7 @@ export default function Dashboard({ theme, setTheme, onLogout }) {
         @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
         @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
       `}</style>
-      <Sidebar active={active} setActive={setActive} onLogout={onLogout} />
+      <Sidebar active={active} setActive={setActive} onLogout={onLogout} user={user} />
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         <TopBar theme={theme} setTheme={setTheme} activeSection={active} notifOpen={notifOpen} setNotifOpen={setNotifOpen} setNotifPanelOpen={setNotifPanelOpen} />
         <main style={{ flex: 1, overflowY: 'auto', padding: '28px 28px 60px' }}>
