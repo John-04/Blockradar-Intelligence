@@ -1,8 +1,8 @@
-# Blockradar Intelligence
+  # ERNIE
 
-> A full-stack wallet analytics & churn prediction platform built on top of the Blockradar API.
+> Engagement & Retention Network Intelligence Engine
 
-Built as a direct outreach project — identifying a real retention problem at Blockradar and building the solution before sending the pitch.
+Built using Blockradar as a case study.
 
 ---
 
